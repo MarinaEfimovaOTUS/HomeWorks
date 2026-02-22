@@ -21,8 +21,8 @@
 
   	systemctl status postgresql
 
-![][image1] 	  pg\_lsclusters  
-![][image2]
+![](attachments/image1.png) 	  pg\_lsclusters  
+![](attachments/image2.png)
 
 Шаг 5\. Настройка PostgreSQL для удаленного доступа  
   *Разрешаем подключения со всех адресов*
@@ -56,7 +56,7 @@ sudo \-u postgres psql
  В *обеих сессиях*  
  \\set AUTOCOMMIT off  
  \\echo :AUTOCOMMIT  
- ![][image3]
+ ![](attachments/image3.png)
 
    
  **ВЫПОЛНИТЬ:**  
@@ -65,18 +65,19 @@ sudo \-u postgres psql
  ***insert into persons(first\_name, second\_name) values('ivan', 'ivanov');***  
  ***insert into persons(first\_name, second\_name) values('petr', 'petrov');***  
  ***commit;***  
- ***![][image4]***
+ ![](attachments/image4.png)
 
    
 ·         **посмотреть текущий уровень изоляции: show transaction isolation level**
 
-**![][image5]**  
+![](attachments/image5.png) 
 ·         **начать новую транзакцию в обоих сессиях с дефолтным (не меняя) уровнем изоляции**  
 ·         **в первой сессии добавить новую запись**  
- ***insert into persons(first\_name, second\_name) values('sergey', 'sergeev';![][image6]***  
+ ***insert into persons(first\_name, second\_name) values('sergey', 'sergeev';***
+ ![](attachments/image6.png)
 ·         **сделать *select*** *\* **from persons*** **во второй сессии**
 
-**![][image7]**  
+![](attachments/image7.png)  
 ·         **видите ли вы новую запись и если да то почему?**
 
 Нет, запись ('sergey', 'sergeev') не видна во второй сессии.  
@@ -93,12 +94,12 @@ sudo \-u postgres psql
 В read committed каждый запрос внутри транзакции видит только те данные, которые были зафиксированы до начала этого конкретного запроса. Вторая сессия уже выполняет транзакцию, и её первый (и единственный) SELECT увидел только две записи.  
    
 ·                     **завершить первую транзакцию** \- *commit*;  
- ![][image8]  
+![](attachments/image8.png)  
  После этого изменения первой сессии зафиксированы, и любая новая транзакция (или новый запрос вне транзакции) увидит все три записи.  
 ·         **сделать** ***select \* from persons*** **во второй сессии**  
 ·         **видите ли вы новую запись и если да то почему?**
 
-**![][image9]**  
+![](attachments/image9.png)  
  Запись видна. В PostgreSQL уровень изоляции READ COMMITTED работает по следующему принцип:  
  Транзакция не имеет единого фиксированного снимка данных на всё время своего существования  
  Каждый отдельный запрос (каждая команда SELECT, INSERT, UPDATE, DELETE) получает новый снимок данных в момент своего начала  
@@ -106,11 +107,11 @@ sudo \-u postgres psql
 ·         **завершите транзакцию во второй сессии**  
 ·         **начать новые, но уже repeatable read транзакции** \- *set transaction isolation level repeatable read;*
 
-*![][image10]*  
+![](attachments/image10.png)  
 ·                   **в первой сессии добавить новую запись insert into persons(first\_name, second\_name) values('sveta', 'svetova');**  
- ![][image11]  
+![](attachments/image11.png) 
 ·         **сделать *select*** *\* **from persons*** **во второй сессии**  
- ![][image12]
+![](attachments/image12.png)
 
    
 ·         **видите ли вы новую запись и если да то почему?**
@@ -119,7 +120,8 @@ sudo \-u postgres psql
 
 ·         **завершить первую транзакцию** \- *commit;*
 
-**сделать *select*** *\* **from persons*** **во второй сессии** ![][image13]
+**сделать *select*** *\* **from persons*** **во второй сессии** 
+![](attachments/image13.png)
 
    
 ·         **видите ли вы новую запись и если да, то почему?**
@@ -127,7 +129,8 @@ sudo \-u postgres psql
 Нет, запись не видна. Потому что вторая сессия работает в уровне изоляции REPEATABLE READ, где снимок данных создается один раз на всю транзакцию — в момент первого обращения к данным (или в момент BEGIN). Все последующие запросы в этой же транзакции видят тот же самый снимок, независимо от того, какие изменения были зафиксированы другими транзакциями.  
 ·         **завершить вторую транзакцию**
 
-**сделать *select*** *\* **from persons*** **во второй сессии** ![][image14]  
+**сделать *select*** *\* **from persons*** **во второй сессии** 
+![](attachments/image14.png)  
 ·         **видите ли вы новую запись и если да, то почему?**
 
 Новая запись видна.  Потому что после завершения старой транзакции (COMMIT) вторая сессия начинает работать в режиме автофиксации (или может начать новую транзакцию). При выполнении запроса создается новый снимок данных, который включает все изменения, зафиксированные к этому моменту, включая запись, добавленную первой сессией.
