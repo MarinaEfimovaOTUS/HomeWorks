@@ -35,6 +35,7 @@
 ![](attachments/image3.png)
 
 ![](attachments/image4.png)
+
 ·         **развернуть контейнер с клиентом postgres**
 
 ![](attachments/image5.png)
