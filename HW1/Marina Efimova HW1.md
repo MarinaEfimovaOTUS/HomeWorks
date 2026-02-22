@@ -21,7 +21,10 @@
 
   	systemctl status postgresql
 
-![](attachments/image1.png) 	  pg\_lsclusters  
+![](attachments/image1.png) 	 
+
+ pg\_lsclusters  
+
 ![](attachments/image2.png)
 
 Шаг 5\. Настройка PostgreSQL для удаленного доступа  
@@ -70,11 +73,13 @@ sudo \-u postgres psql
    
 ·         **посмотреть текущий уровень изоляции: show transaction isolation level**
 
-![](attachments/image5.png) 
+![](attachments/image5.png)
+
 ·         **начать новую транзакцию в обоих сессиях с дефолтным (не меняя) уровнем изоляции**  
 ·         **в первой сессии добавить новую запись**  
  ***insert into persons(first\_name, second\_name) values('sergey', 'sergeev';***
  ![](attachments/image6.png)
+
 ·         **сделать *select*** *\* **from persons*** **во второй сессии**
 
 ![](attachments/image7.png)  
@@ -107,9 +112,11 @@ sudo \-u postgres psql
 ·         **завершите транзакцию во второй сессии**  
 ·         **начать новые, но уже repeatable read транзакции** \- *set transaction isolation level repeatable read;*
 
-![](attachments/image10.png)  
+![](attachments/image10.png)
+
 ·                   **в первой сессии добавить новую запись insert into persons(first\_name, second\_name) values('sveta', 'svetova');**  
-![](attachments/image11.png) 
+![](attachments/image11.png)
+
 ·         **сделать *select*** *\* **from persons*** **во второй сессии**  
 ![](attachments/image12.png)
 
@@ -121,6 +128,7 @@ sudo \-u postgres psql
 ·         **завершить первую транзакцию** \- *commit;*
 
 **сделать *select*** *\* **from persons*** **во второй сессии** 
+
 ![](attachments/image13.png)
 
    
@@ -130,7 +138,9 @@ sudo \-u postgres psql
 ·         **завершить вторую транзакцию**
 
 **сделать *select*** *\* **from persons*** **во второй сессии** 
-![](attachments/image14.png)  
+
+![](attachments/image14.png)
+
 ·         **видите ли вы новую запись и если да, то почему?**
 
 Новая запись видна.  Потому что после завершения старой транзакции (COMMIT) вторая сессия начинает работать в режиме автофиксации (или может начать новую транзакцию). При выполнении запроса создается новый снимок данных, который включает все изменения, зафиксированные к этому моменту, включая запись, добавленную первой сессией.
