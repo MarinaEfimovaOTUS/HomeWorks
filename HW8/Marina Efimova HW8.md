@@ -237,7 +237,8 @@ BEGIN;
 UPDATE table2 SET ...;  
 UPDATE table1 SET ...;  *\-- ждет сессию 1 → DEADLOCK\!*
 
-Проиллюстрируем:  
+Проиллюстрируем: 
+ 
 CREATE TABLE table\_a (  
     id SERIAL PRIMARY KEY,  
     data TEXT  
