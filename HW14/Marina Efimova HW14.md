@@ -118,7 +118,6 @@ sudo rm \-rf /var/lib/postgresql/18/main/\*
 sudo \-u postgres pg\_basebackup \-h 192.168.184.134 \-D /var/lib/postgresql/18/main \-U postgres \-P \-v \-R \--wal-method=stream  
 Выдалась ошибка.   
 ![](attachments/image15.png)
-
 В итоге, выполнено  
 \# Удаляем ВСЮ директорию main полностью  
 sudo rm \-rf /var/lib/postgresql/18/main
